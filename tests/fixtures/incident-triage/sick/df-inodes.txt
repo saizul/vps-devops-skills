@@ -1,0 +1,3 @@
+Filesystem     Type     Inodes  IUsed   IFree IUse% Mounted on
+/dev/sda1      ext4    5120000 4710400 409600   92% /
+tmpfs          tmpfs    501178     900  500278    1% /run

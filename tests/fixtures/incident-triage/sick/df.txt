@@ -1,0 +1,6 @@
+Filesystem     Type     1024-blocks     Used Available Capacity Mounted on
+tmpfs          tmpfs         400944     1100    399844       1% /run
+/dev/sda1      ext4        81000000 78570000   2430000      97% /
+tmpfs          tmpfs        2004712        0   2004712       0% /dev/shm
+/dev/sda15     vfat          106832     6186    100646       6% /boot/efi
+/dev/sdb1      ext4       206293688 180000000 26293688     88% /var/lib/docker

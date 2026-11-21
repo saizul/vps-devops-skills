@@ -1,0 +1,34 @@
+services:
+  app:
+    image: ghcr.io/example/app:2.3.1
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      SECRET_KEY_FILE: /run/secrets/secret_key
+      DEBUG: "false"
+    secrets: [secret_key]
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    mem_limit: 512m
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+  proxy:
+    image: caddy:2.8@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    restart: unless-stopped
+    ports: ["80:80", "443:443", "443:443/udp"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:2019/config/"]
+    deploy:
+      resources:
+        limits: {memory: 256m}
+    logging:
+      driver: local
+secrets:
+  secret_key:
+    file: ./secret_key.txt

@@ -1,0 +1,10 @@
+port 2222
+usepam yes
+permitrootlogin no
+passwordauthentication no
+kbdinteractiveauthentication no
+permitemptypasswords no
+pubkeyauthentication yes
+x11forwarding no
+maxauthtries 3
+allowusers deploy

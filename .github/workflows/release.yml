@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  assets:
+    name: Attach skill zips
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Validate before packaging
+        run: python tools/validate_skills.py
+      - name: Build zips
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          mkdir -p dist
+          cd skills
+          for d in */; do
+            name="${d%/}"
+            zip -qr "../dist/${name}.zip" "$name" -x '*/__pycache__/*' '*.pyc'
+          done
+          cd ..
+          zip -qr "dist/vps-devops-skills-${TAG}.zip" skills README.md LICENSE AGENTS.md \
+            -x '*/__pycache__/*' '*.pyc'
+          ls -l dist
+      - name: Upload to the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" dist/*.zip --clobber --repo "$GITHUB_REPOSITORY"

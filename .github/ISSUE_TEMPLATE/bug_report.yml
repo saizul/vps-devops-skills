@@ -1,0 +1,46 @@
+name: Bug report
+description: A script crashed, reported a wrong finding, or a skill gave unsafe or wrong advice
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never paste secrets, private keys, real passwords or full server logs.** Redact hostnames
+        and IP addresses if you prefer.
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Skill
+      options:
+        - server-hardening-audit
+        - nginx-config-review
+        - docker-compose-review
+        - backup-setup
+        - incident-triage
+        - log-investigation
+        - ssl-tls-check
+        - cron-systemd-timers
+        - validator / repository tooling
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: The command you ran, its output, and (for wrong findings) a minimal redacted input.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "Ubuntu 24.04, Python 3.12, nginx 1.24, Claude Code / Codex CLI"
+    validations:
+      required: true

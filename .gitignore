@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Release artifacts (built by .github/workflows/release.yml)
+dist/
+
+# Output of the generators when run inside the repo
+restic-out/
+units/
+
+# Never commit server credentials or captures
+*.env
+!*.env.example
+audit/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store

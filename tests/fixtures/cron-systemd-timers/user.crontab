@@ -1,0 +1,9 @@
+# m h dom mon dow command
+MAILTO=ops@example.com
+PATH=/usr/local/bin:/usr/bin:/bin
+*/15 * * * * /usr/local/bin/sync-feeds --quiet
+30 2 * * 1-5 /home/deploy/bin/report.sh > /dev/null 2>&1
+0 4 1,15 * 0 /usr/local/bin/rotate
+@weekly /usr/local/bin/cleanup
+@reboot /usr/local/bin/warm-cache
+5 0 * * * date +\%F >> /var/log/stamp.log

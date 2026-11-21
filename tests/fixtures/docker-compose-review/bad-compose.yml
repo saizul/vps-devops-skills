@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  web:
+    image: nginx
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: example-not-a-real-password
+      POSTGRES_USER: app
+    ports:
+      - "5432:5432"
+  redis:
+    image: redis:7.2
+    ports:
+      - target: 6379
+        published: 6379
+        protocol: tcp
+  agent:
+    image: example/agent:1.4.2
+    privileged: true
+    network_mode: host
+    cap_add: [SYS_ADMIN]
+    environment:
+      - API_TOKEN=placeholder-token-value
+      - LOG_LEVEL=info
+    volumes:
+      - /:/host

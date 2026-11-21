@@ -1,0 +1,27 @@
+{
+  "name": "vps-devops-skills",
+  "description": "Practical Agent Skills for running Ubuntu/Debian servers safely.",
+  "owner": {
+    "name": "Saizul Amin",
+    "url": "https://github.com/saizul"
+  },
+  "plugins": [
+    {
+      "name": "vps-devops-skills",
+      "source": "./",
+      "description": "Server hardening audit, nginx and docker-compose review, restic backups, incident triage, log investigation, TLS checks, cron to systemd timers.",
+      "category": "devops",
+      "tags": ["devops", "linux", "ubuntu", "nginx", "docker", "backup", "systemd", "security"],
+      "skills": [
+        "./skills/server-hardening-audit",
+        "./skills/nginx-config-review",
+        "./skills/docker-compose-review",
+        "./skills/backup-setup",
+        "./skills/incident-triage",
+        "./skills/log-investigation",
+        "./skills/ssl-tls-check",
+        "./skills/cron-systemd-timers"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+SHELL=/bin/sh
+17 *	* * *	www-data  cd /var/www/app && php artisan schedule:run
+0 3 * jan,jul sun root /usr/sbin/logrotate /etc/logrotate.conf
+61 * * * * root /bin/true

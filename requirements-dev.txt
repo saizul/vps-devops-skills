@@ -1,0 +1,4 @@
+pytest>=8
+ruff>=0.6
+# Optional: lets the docker-compose-review tests read YAML fixtures directly.
+pyyaml>=6

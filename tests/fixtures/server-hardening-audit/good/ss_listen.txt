@@ -1,0 +1,4 @@
+tcp   LISTEN 0      4096         0.0.0.0:2222       0.0.0.0:*    users:(("sshd",pid=812,fd=3))
+tcp   LISTEN 0      151        127.0.0.1:3306       0.0.0.0:*    users:(("mysqld",pid=901,fd=21))
+tcp   LISTEN 0      511          0.0.0.0:443        0.0.0.0:*    users:(("nginx",pid=1001,fd=6))
+tcp   LISTEN 0      511             [::]:443           [::]:*    users:(("nginx",pid=1001,fd=7))
