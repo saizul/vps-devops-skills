@@ -31,6 +31,7 @@ standard-library-only Python script, so the agent gets deterministic answers ins
 | [log-investigation](skills/log-investigation/SKILL.md) | Access log summary (status, IPs, paths, 5xx/404, busiest minute, scanner probes, slow endpoints; .gz ok) plus journalctl/grep/awk recipes | "Who is hammering my server and what's behind the 5xx spike?" |
 | [ssl-tls-check](skills/ssl-tls-check/SKILL.md) | Expiry, SAN match, chain verification, TLS version, legacy TLS 1.0/1.1, PEM file inspection, certbot troubleshooting | "Check SSL expiry for example.com, www and api" |
 | [cron-systemd-timers](skills/cron-systemd-timers/SKILL.md) | Converts crontab lines to `.service` + `.timer` (OnCalendar, Persistent, User=, OnFailure), explains schedules, debugs jobs that do not run | "Convert my crontab to systemd timers" |
+| [php-fpm-pool-sizing](skills/php-fpm-pool-sizing/SKILL.md) | Measures php-fpm child RSS, computes `pm.max_children` (p90, reserve for MySQL/Redis, several pools), spare servers and pm mode; flags pools that can overcommit RAM | "We keep hitting pm.max_children, what should it be on this 4 GB VPS?" |
 
 ## Install
 
@@ -158,7 +159,6 @@ Ideas for new skills (great first contributions; see [CONTRIBUTING.md](CONTRIBUT
 - `postgres-health-check` - connections, bloat, long transactions, replication lag (read-only SQL)
 - `mysql-tuning-review` - parse `SHOW VARIABLES` / `SHOW STATUS` for buffer pool, connections, slow log
 - `logrotate-review` - find logs without rotation and validate `/etc/logrotate.d/*`
-- `php-fpm-pool-sizing` - compute `pm.max_children` from RAM and per-child RSS
 - `ufw-rules-review` - parse `ufw status numbered` and spot shadowed or overly broad rules
 - `dns-records-check` - A/AAAA/MX/SPF/DMARC/CAA sanity for a domain
 - `systemd-service-hardening` - score units with `systemd-analyze security` and suggest sandboxing

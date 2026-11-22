@@ -2,7 +2,7 @@
   "name": "vps-devops-skills",
   "displayName": "VPS DevOps Skills",
   "version": "0.1.0",
-  "description": "Agent Skills for running Linux servers safely: hardening audit, nginx and docker-compose review, restic backups, incident triage, log investigation, TLS checks and cron to systemd timers.",
+  "description": "Agent Skills for running Linux servers safely: hardening audit, nginx and docker-compose review, restic backups, incident triage, log investigation, TLS checks, cron to systemd timers and php-fpm pool sizing.",
   "author": {
     "name": "Saizul Amin",
     "url": "https://github.com/saizul"

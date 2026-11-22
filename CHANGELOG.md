@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `php-fpm-pool-sizing`: new skill with `fpm_sizing.py`, which computes `pm.max_children`
+  from RAM, a reserve for other services and measured child RSS (90th percentile by
+  default), suggests spare-server values for `dynamic`, `ondemand` or `static`, splits the
+  budget across pools and exits 1 when an existing pool file can overcommit memory.
+
 ## [0.1.0] - 2026-11-21
 
 ### Added

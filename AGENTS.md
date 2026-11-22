@@ -20,6 +20,7 @@ README "Install"). If you are reading this file inside the repository instead:
    | access logs, journalctl, who is hitting the server | `log-investigation` |
    | certificate expiry, HTTPS errors, certbot | `ssl-tls-check` |
    | cron jobs, systemd timers, OnCalendar | `cron-systemd-timers` |
+   | php-fpm pm.max_children, pool memory, 502 under load | `php-fpm-pool-sizing` |
 
 2. Read that `SKILL.md` completely and follow its Workflow section in order.
 3. Paths such as `scripts/x.py` and `references/y.md` are relative to the skill folder.
