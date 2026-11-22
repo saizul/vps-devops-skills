@@ -207,7 +207,7 @@ def test_frontmatter_parser_block_scalars():
 def test_cli(tmp_path):
     script = ROOT / "tools" / "validate_skills.py"
     ok = subprocess.run([sys.executable, str(script)], capture_output=True, text=True, check=False)
-    assert ok.returncode == 0 and ok.stdout.startswith("OK: 8 skills")
+    assert ok.returncode == 0 and ok.stdout.startswith("OK: 9 skills")
     root = make_repo(tmp_path, listed=[])
     bad = subprocess.run(
         [sys.executable, str(script), "--root", str(root), "--json"],
