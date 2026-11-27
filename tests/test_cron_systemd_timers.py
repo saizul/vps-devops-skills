@@ -141,3 +141,55 @@ def test_cli_errors(tmp_path):
     empty = tmp_path / "empty"
     empty.write_text("# nothing\n")
     assert run_script(SKILL, SCRIPT, "--file", str(empty)).returncode == 2
+
+
+def convert(*args, stdin=None):
+    res = run_script(SKILL, SCRIPT, *args, "--json", stdin=stdin)
+    return res, json.loads(res.stdout) if res.stdout.strip() else None
+
+
+def test_cron_tz_becomes_on_calendar_suffix():
+    crontab = "CRON_TZ=Asia/Dhaka\n0 2 * * * /usr/local/bin/backup\n0 4 1,15 * 0 /usr/local/bin/report\n"
+    res, data = convert("--file", "-", stdin=crontab)
+    assert res.returncode == 0, res.stderr
+    backup, report = data["units"]
+    assert backup["on_calendar"] == ["*-*-* 02:00:00 Asia/Dhaka"]
+    assert report["on_calendar"] == ["*-*-01,15 04:00:00 Asia/Dhaka", "Sun *-*-* 04:00:00 Asia/Dhaka"]
+    assert "OnCalendar=*-*-* 02:00:00 Asia/Dhaka" in backup["timer"]
+    assert "CRON_TZ" not in backup["service"]
+    assert any("systemd 235" in w for w in backup["warnings"])
+
+
+def test_cron_tz_applies_only_to_following_lines():
+    crontab = "0 1 * * * /usr/local/bin/a\nCRON_TZ=UTC\n0 1 * * * /usr/local/bin/b\n"
+    _, data = convert("--file", "-", stdin=crontab)
+    assert [u["on_calendar"] for u in data["units"]] == [["*-*-* 01:00:00"], ["*-*-* 01:00:00 UTC"]]
+
+
+def test_timezone_option_overrides_cron_tz():
+    _, data = convert(
+        "--file", "-", "--timezone", "Europe/London", stdin="CRON_TZ=Asia/Dhaka\n@daily /usr/local/bin/x\n"
+    )
+    unit = data["units"][0]
+    assert unit["on_calendar"] == ["*-*-* 00:00:00 Europe/London"]
+    assert any("overrides CRON_TZ=Asia/Dhaka" in w for w in unit["warnings"])
+
+
+def test_timezone_with_reboot_has_no_calendar():
+    _, data = convert("--line", "@reboot /usr/local/bin/x", "--timezone", "UTC")
+    unit = data["units"][0]
+    assert unit["on_calendar"] == [] and "OnBootSec=1min" in unit["timer"]
+    assert not any("235" in w for w in unit["warnings"])
+
+
+@pytest.mark.parametrize("tz", ["Asia/Dhaka", "America/Argentina/Buenos_Aires", "UTC", "Etc/GMT+6"])
+def test_valid_time_zones(tz):
+    res, data = convert("--line", "0 3 * * * /usr/local/bin/x", "--timezone", tz)
+    assert res.returncode == 0 and data["units"][0]["on_calendar"] == [f"*-*-* 03:00:00 {tz}"]
+
+
+@pytest.mark.parametrize("tz", ["Asia Dhaka", "+06:00", "Asia/Dhaka;rm"])
+def test_invalid_time_zone_is_an_error(tz):
+    res, data = convert("--line", "0 3 * * * /usr/local/bin/x", "--timezone", tz)
+    assert res.returncode == 1
+    assert data["units"] == [] and "time zone" in data["errors"][0]

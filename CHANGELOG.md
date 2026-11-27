@@ -8,6 +8,17 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- `cron-systemd-timers`: `cron_to_timer.py` turns `CRON_TZ=Area/City` lines into a time zone
+  suffix on every `OnCalendar=` expression (systemd 235+), with a new `--timezone` option to
+  set or override it. Invalid zone names are reported as conversion errors.
+
+### Fixed
+
+- `cron-systemd-timers`: `CRON_TZ` is no longer emitted as an `Environment=` line, where it
+  had no effect on the schedule.
+
+### Added
+
 - `php-fpm-pool-sizing`: new skill with `fpm_sizing.py`, which computes `pm.max_children`
   from RAM, a reserve for other services and measured child RSS (90th percentile by
   default), suggests spare-server values for `dynamic`, `ondemand` or `static`, splits the

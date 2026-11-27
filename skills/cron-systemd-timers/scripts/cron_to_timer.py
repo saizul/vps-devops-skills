@@ -5,7 +5,9 @@ Handles the 5-field syntax (lists, ranges, steps, month and weekday names),
 @hourly/@daily/@weekly/@monthly/@yearly/@reboot, VAR=value lines, the /etc/cron.d
 user column (--system), '%' escaping, and the cron rule that a job with both
 day-of-month and day-of-week restricted runs when EITHER matches (emitted as
-two OnCalendar= lines, which systemd ORs).
+two OnCalendar= lines, which systemd ORs). CRON_TZ=Area/City (cronie) or --timezone
+becomes a time zone suffix on every OnCalendar= line (systemd 235+) instead of a
+useless Environment= entry.
 
 Input: --line "*/5 * * * * /usr/local/bin/job", or a crontab file (``crontab -l``
 output, /etc/crontab, /etc/cron.d/*). Output: unit files printed to stdout, or
@@ -45,6 +47,7 @@ SPECIALS = {
     "@midnight": "*-*-* 00:00:00",
     "@hourly": "*-*-* *:00:00",
 }
+TZ_RE = re.compile(r"^(UTC|GMT|[A-Za-z][A-Za-z0-9_+-]*(/[A-Za-z0-9_+-]+){1,2})$")
 SHELL_CHARS = re.compile(r"[|&;<>()$`\\\"'*?\[\]#~{}]")
 
 
@@ -273,6 +276,16 @@ def build_units(job: Job, name: str, args) -> Converted:
     on_cal, on_boot, warnings = to_on_calendar(job.schedule)
     exec_cmd, w2 = cron_command_to_exec(job.command)
     warnings += w2
+    cron_tz = job.env.pop("CRON_TZ", None)
+    tz = args.timezone or cron_tz
+    if tz:
+        if not TZ_RE.match(tz):
+            raise CronError(f"time zone {tz!r} is not a tz database name like Asia/Dhaka or UTC")
+        on_cal = [f"{expr} {tz}" for expr in on_cal]
+        if args.timezone and cron_tz and cron_tz != args.timezone:
+            warnings.append(f"--timezone {args.timezone} overrides CRON_TZ={cron_tz} from the crontab")
+        if on_cal:
+            warnings.append(f"OnCalendar= in {tz} needs systemd 235+; check with: timedatectl list-timezones")
     mailto = job.env.pop("MAILTO", None)
     if mailto is not None:
         warnings.append("MAILTO has no systemd equivalent; use OnFailure= with a notify unit")
@@ -328,6 +341,10 @@ def main(argv: list[str] | None = None) -> int:
         "--persistent",
         action="store_true",
         help="Persistent=true: run missed jobs after downtime (cron does not)",
+    )
+    p.add_argument(
+        "--timezone",
+        help="tz database zone for the schedule, e.g. Asia/Dhaka (default: CRON_TZ or server time)",
     )
     p.add_argument("--random-delay", help="RandomizedDelaySec=, e.g. 5min, to spread load")
     p.add_argument("--precise", action="store_true", help="AccuracySec=1s instead of the 1min default")
