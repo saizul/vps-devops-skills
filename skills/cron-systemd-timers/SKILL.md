@@ -47,6 +47,9 @@ Paths below are relative to this skill's folder (in Claude Code: `${CLAUDE_SKILL
    - `%` in cron is a newline; `\%` is a literal percent. In units `%` must be `%%`.
    - Output redirection (`>/dev/null 2>&1`) is unnecessary: output goes to the journal.
    - `MAILTO` has no equivalent: use `OnFailure=` (see the reference).
+   - `CRON_TZ=Asia/Dhaka` (or `--timezone Asia/Dhaka`) is kept as a zone suffix on each
+     `OnCalendar=` line (`*-*-* 02:00:00 Asia/Dhaka`, systemd 235+). Without it the timer
+     uses the server's time zone, as cron does.
    - Environment: cron's minimal `PATH` differs from systemd's; use absolute paths.
 4. **Verify the schedule on the server** for each expression:
    `systemd-analyze calendar --iterations=5 'Mon..Fri *-*-* 02:30:00'`.

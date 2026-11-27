@@ -30,7 +30,7 @@ standard-library-only Python script, so the agent gets deterministic answers ins
 | [incident-triage](skills/incident-triage/SKILL.md) | Snapshot of load, memory, disk/inodes, OOM kills, failed units; runbooks for high load, disk full, OOM, 5xx | "My site is returning 502 and the server feels slow" |
 | [log-investigation](skills/log-investigation/SKILL.md) | Access log summary (status, IPs, paths, 5xx/404, busiest minute, scanner probes, slow endpoints; .gz ok) plus journalctl/grep/awk recipes | "Who is hammering my server and what's behind the 5xx spike?" |
 | [ssl-tls-check](skills/ssl-tls-check/SKILL.md) | Expiry, SAN match, chain verification, TLS version, legacy TLS 1.0/1.1, PEM file inspection, certbot troubleshooting | "Check SSL expiry for example.com, www and api" |
-| [cron-systemd-timers](skills/cron-systemd-timers/SKILL.md) | Converts crontab lines to `.service` + `.timer` (OnCalendar, Persistent, User=, OnFailure), explains schedules, debugs jobs that do not run | "Convert my crontab to systemd timers" |
+| [cron-systemd-timers](skills/cron-systemd-timers/SKILL.md) | Converts crontab lines to `.service` + `.timer` (OnCalendar, `CRON_TZ` time zones, Persistent, User=, OnFailure), explains schedules, debugs jobs that do not run | "Convert my crontab to systemd timers" |
 | [php-fpm-pool-sizing](skills/php-fpm-pool-sizing/SKILL.md) | Measures php-fpm child RSS, computes `pm.max_children` (p90, reserve for MySQL/Redis, several pools), spare servers and pm mode; flags pools that can overcommit RAM | "We keep hitting pm.max_children, what should it be on this 4 GB VPS?" |
 
 ## Install
